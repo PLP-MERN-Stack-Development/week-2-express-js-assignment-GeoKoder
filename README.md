@@ -1,63 +1,195 @@
-[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-2e0aaae1b6195c2367325f4f02e2d04e9abb55f0b24a779b69b11b9e10269abc.svg)](https://classroom.github.com/online_ide?assignment_repo_id=19843065&assignment_repo_type=AssignmentRepo)
-# Express.js RESTful API Assignment
+# 🚂 Week 2: Express.js – Server-Side Framework
 
-This assignment focuses on building a RESTful API using Express.js, implementing proper routing, middleware, and error handling.
+## 🚀 Objective
 
-## Assignment Overview
+Build a **RESTful API** using **Express.js** that supports standard CRUD operations, proper routing, middleware implementation, error handling, and advanced API features like search, filtering, pagination, and statistics.
 
-You will:
-1. Set up an Express.js server
-2. Create RESTful API routes for a product resource
-3. Implement custom middleware for logging, authentication, and validation
-4. Add comprehensive error handling
-5. Develop advanced features like filtering, pagination, and search
+## 📦 Project Overview
 
-## Getting Started
+This Express.js server manages a collection of **products** using in-memory storage. It includes:
 
-1. Accept the GitHub Classroom assignment invitation
-2. Clone your personal repository that was created by GitHub Classroom
-3. Install dependencies:
-   ```
-   npm install
-   ```
-4. Run the server:
-   ```
-   npm start
-   ```
+- 🔁 Full CRUD operations
+- 🔐 API Key Authentication
+- 🧱 Middleware (logging, validation, error handling)
+- 🕵️ Filtering, searching, and pagination
+- 📊 Product statistics by category
 
-## Files Included
+## 🛠️ Setup Instructions
 
-- `Week2-Assignment.md`: Detailed assignment instructions
-- `server.js`: Starter Express.js server file
-- `.env.example`: Example environment variables file
+### 1. Prerequisites
 
-## Requirements
+- **Node.js** (v18 or higher recommended)
+- A terminal tool (e.g., VS Code Terminal, Git Bash, or CMD)
 
-- Node.js (v18 or higher)
-- npm or yarn
-- Postman, Insomnia, or curl for API testing
+Verify your Node version:
 
-## API Endpoints
+```bash
+node -v
+````
 
-The API will have the following endpoints:
+### 2. Installation Steps
 
-- `GET /api/products`: Get all products
-- `GET /api/products/:id`: Get a specific product
-- `POST /api/products`: Create a new product
-- `PUT /api/products/:id`: Update a product
-- `DELETE /api/products/:id`: Delete a product
+1. **Clone the repository** (or create a new project and use the provided `server.js`):
+```bash
+git clone https://github.com/your-username/express-products-api.git
+cd express-products-api
+```
 
-## Submission
+2. **Install dependencies:**
 
-Your work will be automatically submitted when you push to your GitHub Classroom repository. Make sure to:
+```bash
+npm install express body-parser uuid
+```
 
-1. Complete all the required API endpoints
-2. Implement the middleware and error handling
-3. Document your API in the README.md
-4. Include examples of requests and responses
+3. **Run the server:**
 
-## Resources
+```bash
+node server.js
+Server will start at:
+```
 
-- [Express.js Documentation](https://expressjs.com/)
-- [RESTful API Design Best Practices](https://restfulapi.net/)
-- [HTTP Status Codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status) 
+http://localhost:3000
+
+
+## 📁 API Endpoints
+### 🌐 Root
+
+| Method | Route | Description           |
+| ------ | ----- | --------------------- |
+| GET    | `/`   | Returns "Hello World" |
+
+### 📦 Products CRUD
+
+| Method | Route               | Description                |
+| ------ | ------------------- | -------------------------- |
+| GET    | `/api/products`     | List all products          |
+| GET    | `/api/products/:id` | Get product by ID          |
+| POST   | `/api/products`     | Create a new product       |
+| PUT    | `/api/products/:id` | Update an existing product |
+| DELETE | `/api/products/:id` | Delete a product           |
+
+### 🔍 Advanced Features
+
+| Feature    | Route                           | Description                            |
+| ---------- | ------------------------------- | -------------------------------------- |
+| Filter     | `/api/products?category=...`    | Filter products by category            |
+| Pagination | `/api/products?page=1&limit=2`  | Paginate the product list              |
+| Search     | `/api/products/search?name=...` | Search products by name                |
+| Stats      | `/api/products/stats`           | Returns count of products per category |
+
+## 🔒 Authentication (API Key)
+
+Optional middleware (can be enabled in `server.js`) that checks for a valid API key in headers:
+
+**Header to include in requests:**
+
+x-api-key: 12345SECRETKEY
+```
+Uncomment this line in `server.js` to activate:
+```js
+// app.use(apiKeyAuth);
+```
+
+## 🧱 Middleware Breakdown
+
+### ✅ Custom Logger
+
+Logs every request with method, URL, and timestamp:
+```
+[2024-07-13T12:00:00Z] GET /api/products
+```
+### ✅ JSON Parser
+Parses incoming JSON requests using `body-parser` and `express.json()`.
+
+### ✅ Product Validation
+
+Ensures:
+* `name` is a non-empty string
+* `price` is a positive number
+* `inStock` is a boolean (if provided)
+
+### ✅ Error Handling
+
+Global error handler for:
+* 404 not found routes
+* Asynchronous and synchronous errors
+* Custom error classes:
+  * `NotFoundError`
+  * `ValidationError`
+  * `UnauthorizedError`
+
+
+## 🧪 Testing the API
+
+### ✅ Tools You Can Use
+
+* Postman / Insomnia
+* Curl
+* VS Code REST Client extension
+
+### 📬 Example Request: Create Product
+
+```http
+POST /api/products
+Content-Type: application/json
+x-api-key: 12345SECRETKEY
+
+{
+  "name": "Headphones",
+  "description": "Wireless over-ear headphones",
+  "price": 199.99,
+  "category": "electronics",
+  "inStock": true
+}
+```
+
+### 📬 Example Request: Search by Name
+
+```http
+GET /api/products/search?name=laptop
+```
+
+### 📬 Example Request: Get Stats
+
+```http
+GET /api/products/stats
+```
+
+Response:
+
+```json
+{
+  "countsByCategory": {
+    "electronics": 2,
+    "kitchen": 1
+  },
+  "totalProducts": 3
+}
+```
+
+---
+
+## 🚧 Future Improvements
+
+* Use a real database (MongoDB, PostgreSQL)
+* Add user authentication and authorization
+* Add sorting by price/name
+* Add Swagger documentation
+* Dockerize the app for deployment
+
+---
+
+## 📄 License
+
+This project is free to use for educational purposes.
+
+---
+
+## 🙌 Acknowledgments
+
+This project was created as part of a backend learning journey in Express.js (Week 2). Special thanks to mentors and peers for their input!
+
+---
+
+> ✅ Tip: You can edit and improve this README as your project grows. Good documentation makes your code more valuable!
+
